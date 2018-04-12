@@ -28,7 +28,7 @@ Public Class Form1
     Dim LastUserGreeted As String = My.Settings.LastUserGreeted
     Dim LastUserGoodbye As String = My.Settings.LastUserGoodbye
     Private Async Function OnGuildMemberAdd(ByVal e As GuildMemberAddEventArgs) As Task Handles DiscordClient.GuildMemberAdded
-        'Await DiscordClient.SendMessageAsync(Await DiscordClient.GetChannelAsync(402802330728267776), "Démosle una cordiál bienvenida a " & e.Member.Mention & " al chat de The Union :smiley:")
+        Await DiscordClient.SendMessageAsync(Await DiscordClient.GetChannelAsync(391855464993914893), "Démosle una cordiál bienvenida a " & e.Member.Mention & " al chat de The Union :smiley:")
     End Function
     Private Function FindUserInFile(user As String)
         Dim userInFile As String = String.Empty
@@ -305,10 +305,15 @@ Public Class Form1
                     Else
                         Await e.Channel.SendMessageAsync("@" & User & " tiene " & Balance & " :smiley: ")
                     End If
+                ElseIf e.Message.Content.ToLower().Contains("!vp") Then
+                    Dim VP As Double = GetResultFromSteemPlaceAPI(User, "vp")
+                    If IsUserInDiscord Then
+                        Await e.Channel.SendMessageAsync(UserInDiscord.Mention & ", tu poder de voto es " & VP & "% :heart: ")
+                    Else
+                        Await e.Channel.SendMessageAsync("@" & User & ", tu poder de voto es " & VP & "% :slight_smile: ")
+                    End If
                 ElseIf e.Message.Content.ToLower().Contains("!witness") Then
                     Dim WitnessVotes As String = GetResultFromSteemPlaceAPI(User, "witness")
-                    Dim VoteLink As String = ""
-                    Dim Voted = False
                     Dim MentionMoises As DiscordUser = Await DiscordClient.GetUserAsync("323205598311219211")
                     If String.IsNullOrEmpty(WitnessVotes) = False Then
                         If WitnessVotes.Contains("moisesmcardona") Then
